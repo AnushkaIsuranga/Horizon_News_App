@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react"
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -31,3 +32,6 @@ mongoose.connect("mongodb+srv://isuranga880:c2OnLlTo4LENitSg@cluster0.ofcf3.mong
     console.log("Error: ", err);
 });
 mongoose.connection.on('error', (err) => console.error("MongoDB Error:", err));
+
+// Export the Express API
+module.exports = app;
