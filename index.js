@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/react"
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
