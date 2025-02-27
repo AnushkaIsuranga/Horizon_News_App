@@ -27,19 +27,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb94b949-6cff-416d-892d-01760e29d47c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/activity/ReporterActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/activity/UserActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.9/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.9/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.9/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.9/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.9/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.9/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.9/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.9/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.9/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.9/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/auth.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/news.model.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.model.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/news.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/user.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vercel.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/api/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/models/user.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/api/models/user.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/api/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/api/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/routes/user.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/api/routes/user.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/vercel.json" beforeDir="false" afterPath="$PROJECT_DIR$/api/vercel.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/activity/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/activity/LoginActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/activity/RegisterActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/activity/RegisterActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/model/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/model/User.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/model/UserResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/model/UserResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/utils/RetrofitClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/kahdse/horizonnewsapp/utils/RetrofitClient.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,22 +97,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Android App.app.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\new project\Horizon_News_App\api" />
       <recent name="D:\new project\Horizon_News_App\app\src\main\res\layout" />
+    </key>
+    <key name="CreateKotlinClassDialog.RecentsKey">
+      <recent name="com.kahdse.horizonnewsapp.activity" />
     </key>
   </component>
   <component name="RunManager">

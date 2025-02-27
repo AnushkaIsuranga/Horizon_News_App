@@ -1,6 +1,7 @@
 package com.kahdse.horizonnewsapp.activity
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.content.Intent
 import android.net.Uri
@@ -95,10 +96,16 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
-        if  (passwordInput.text.toString().trim() != conf_passwordInput.text.toString().trim()) {
+        if (passwordInput.text.toString().trim() != conf_passwordInput.text.toString().trim()) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
             return
         }
+
+        // Show progress dialog
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Registering user...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
 
         // Prepare text data
         val firstNamePart = firstName.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -113,13 +120,19 @@ class RegisterActivity : AppCompatActivity() {
         selectedImageUri?.let { uri ->
             val filePath = getRealPathFromURI(uri)
             if (filePath != null) {
-                if (filePath.isNotEmpty()) {
-                    val file = File(filePath)
+                val file = File(filePath)
+                if (file.exists()) { // Ensure the file exists before sending
                     val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
                     profilePicPart = MultipartBody.Part.createFormData("profile_pic", file.name, requestFile)
+                } else {
+                    Log.e("RegisterActivity", "File does not exist: $filePath")
                 }
+            } else {
+                Log.e("RegisterActivity", "Failed to get real path from URI")
             }
         }
+
+        Log.d("RegisterActivity", "Selected Image URI: $selectedImageUri")
 
         val apiService: ApiService = RetrofitClient.createService(ApiService::class.java)
         val call: Call<UserResponse> = apiService.createUser(
@@ -128,11 +141,18 @@ class RegisterActivity : AppCompatActivity() {
 
         call.enqueue(object : Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                if (response.isSuccessful && response.body() != null) {
+                val responseBody = response.body()
+                Log.d("RegisterActivity", "Response Code: ${response.code()}")
+                Log.d("RegisterActivity", "Response Body: $responseBody")
+                Log.d("RegisterActivity", "Error Body: ${response.errorBody()?.string()}")
+
+                if (response.isSuccessful && responseBody != null) {
+                    val imageUrl = responseBody.profile_pic
+                    Log.d("RegisterActivity", "Profile Image URL: $imageUrl")
+
                     Toast.makeText(this@RegisterActivity, "Registration Successful", Toast.LENGTH_LONG).show()
                     finish()
                 } else {
-                    // Log error details
                     val errorBody = response.errorBody()?.string()
                     Log.e("RegisterActivity", "Registration Failed: ${response.code()} - $errorBody")
                     Toast.makeText(this@RegisterActivity, "Registration Failed: ${response.code()}", Toast.LENGTH_LONG).show()
@@ -140,18 +160,22 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                progressDialog.dismiss()
                 Log.e("RegisterActivity", "API Call Failed: ${t.localizedMessage}", t)
                 Toast.makeText(this@RegisterActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
             }
         })
     }
 
-    fun getRealPathFromURI(uri: Uri): String? {
-        val cursor = contentResolver.query(uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
-        return cursor?.use {
-            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            it.moveToFirst()
-            it.getString(columnIndex)
+    private fun getRealPathFromURI(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            val path = cursor.getString(columnIndex)
+            Log.d("RegisterActivity", "Real Image Path: $path")
+            return path
         }
+        return null
     }
 }

@@ -42,8 +42,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginUser() {
-        val email = emailInput.text.toString()
-        val password = passwordInput.text.toString()
+        val email = emailInput.text.toString().trim()
+        val password = passwordInput.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show()
@@ -57,12 +57,34 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
-                    Toast.makeText(applicationContext, "Welcome ${loginResponse?.user?.first_name}", Toast.LENGTH_SHORT).show()
 
-                    val sharedPref = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                    sharedPref.edit().putString("TOKEN", loginResponse?.token).apply()
+                    if (loginResponse != null) {
+                        val user = loginResponse.user
+                        val token = loginResponse.token
+                        val role = user.role // Extract role
+
+                        // Save token in SharedPreferences
+                        val sharedPref = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
+                        sharedPref.edit().putString("TOKEN", token).apply()
+
+                        Toast.makeText(applicationContext, "Welcome ${user.first_name}", Toast.LENGTH_SHORT).show()
+
+                        // Open appropriate activity based on role
+                        val intent = when (role) {
+                            "user" -> Intent(this@LoginActivity, UserActivity::class.java)
+                            "reporter" -> Intent(this@LoginActivity, ReporterActivity::class.java)
+                            else -> {
+                                Toast.makeText(applicationContext, "Invalid role", Toast.LENGTH_SHORT).show()
+                                return
+                            }
+                        }
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(applicationContext, "Login failed: Invalid response", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(applicationContext, "Login failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Login failed: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             }
 

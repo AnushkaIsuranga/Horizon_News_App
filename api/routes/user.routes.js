@@ -1,13 +1,29 @@
 const express = require('express');
 const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const app = express();
 
-// Multer setup for profile pictures
-const storage = multer.memoryStorage();
+//Configure Cloudinary
+cloudinary.config({
+    cloud_name: 'dkpre5kis',
+    api_key: '832397485563889',
+    api_secret: '5o9oI98AvyvnMoKBa6vlEa0xqZY'
+});
+
+//Set Up Multer Storage for Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'profile_pics', // Change folder name as needed
+        allowed_formats: ['jpg', 'png', 'jpeg']
+    }
+});
+
 const upload = multer({ storage });
 
 //Get All Users
@@ -62,47 +78,45 @@ router.delete('/:id', async (req, res) => {
 
 //Create a User
 router.post('/register', upload.single('profile_pic'), async (req, res) => {
-    console.log("Request Body:", req.body);
-    console.log("Uploaded File:", req.file);
     try {
+        console.log("Received Request Body:", req.body);
+        console.log("Received File:", req.file);
+
         const { first_name, last_name, phone, email, password, role } = req.body;
 
-        // Check if profile picture was uploaded
-        let profilePicPath = null;
-        if (req.file) {
-            profilePicPath = req.file.path; // 👈 Save file path
+        if (!first_name || !last_name || !phone || !email || !password) {
+            return res.status(400).json({ message: "All fields are required" });
         }
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
+        const profilePicUrl = req.file ? req.file.path : null;
 
-        // Create user
         const user = new User({
             first_name,
             last_name,
             phone,
             email,
-            profile_pic: profilePicPath, // 👈 Save file path instead of req.body
             password: hashedPassword,
-            role
+            role,
+            profile_pic: profilePicUrl
         });
 
         await user.save();
-        res.status(201).json({ message: "User created successfully", userId: user._id });
+        res.status(201).json({ message: "User created successfully", userId: user._id, profile_pic: profilePicUrl });
+
     } catch (error) {
-        console.error(error);
+        console.error("Error in Registration:", error);
         res.status(500).json({ message: error.message });
     }
 });
 
-
 // User Login
 router.post('/login', async (req, res) => {
     try {
-        const { phone, password } = req.body;
+        const { email, password } = req.body;
 
-        // Find user by phone
-        const user = await User.findOne({ phone });
+        // Find user by email
+        const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         // Compare password
