@@ -76,7 +76,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-//Create a User
+// Create a User
 router.post('/register', upload.single('profile_pic'), async (req, res) => {
     try {
         console.log("Received Request Body:", req.body);
@@ -88,7 +88,11 @@ router.post('/register', upload.single('profile_pic'), async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
+        console.log(`Original Password: ${password}`);
+        console.log(`Hashed Password: ${hashedPassword}`);
+
         const profilePicUrl = req.file ? req.file.path : null;
 
         const user = new User({
@@ -96,7 +100,7 @@ router.post('/register', upload.single('profile_pic'), async (req, res) => {
             last_name,
             phone,
             email,
-            password: hashedPassword,
+            password: hashedPassword,  // Ensure hashed password is stored
             role,
             profile_pic: profilePicUrl
         });
@@ -114,20 +118,32 @@ router.post('/register', upload.single('profile_pic'), async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log(`Login attempt for email: ${email}`);
 
-        // Find user by email
-        const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        const user = await User.findOne({ email }).select("+password");
 
-        // Compare password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+        if (!user) {
+            console.log("User not found in DB");
+            return res.status(404).json({ message: "User not found" });
+        }
 
-        // Generate JWT Token
+        console.log(`Stored hashed password: ${user.password}`);
+        console.log(`Entered password: ${req.body.password}`);
+
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        console.log(`Password comparison result: ${isMatch}`);
+
+        if (!isMatch) {
+            console.log("Invalid credentials");
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
         const token = jwt.sign({ id: user._id, role: user.role }, 'your_secret_key', { expiresIn: '7d' });
 
+        console.log("Login successful");
         res.json({ token, user });
     } catch (error) {
+        console.error("Error:", error);
         res.status(500).json({ message: error.message });
     }
 });
