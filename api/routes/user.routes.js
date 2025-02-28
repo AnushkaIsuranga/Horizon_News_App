@@ -93,7 +93,8 @@ router.post('/register', upload.single('profile_pic'), async (req, res) => {
         console.log(`Original Password: ${password}`);
         console.log(`Hashed Password: ${hashedPassword}`);
 
-        const profilePicUrl = req.file ? req.file.path : null;
+        // Ensure profile picture URL is correctly retrieved
+        const profilePicUrl = req.file ? req.file.path || req.file.secure_url : null
 
         const user = new User({
             first_name,
