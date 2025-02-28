@@ -25,7 +25,6 @@ interface ApiService {
         @Part profile_pic: MultipartBody.Part?
     ): Call<UserResponse>
 
-    @Multipart
     @POST("api/users/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 }
