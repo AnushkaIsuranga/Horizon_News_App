@@ -21,6 +21,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordInput: EditText
     private lateinit var loginButton: Button
     private lateinit var registerButton: Button
+    private lateinit var skipLoginButton: Button  // Added skip login button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
         passwordInput = findViewById(R.id.passwordInput)
         loginButton = findViewById(R.id.loginButton)
         registerButton = findViewById(R.id.registerButton)
+        skipLoginButton = findViewById(R.id.skipLoginButton)  // Initialize skip button
 
         loginButton.setOnClickListener {
             loginUser()
@@ -37,6 +39,13 @@ class LoginActivity : AppCompatActivity() {
 
         registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
+        skipLoginButton.setOnClickListener {
+            // Navigate to the news feed without login
+            val intent = Intent(this, UserActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
     }
@@ -61,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
                     if (loginResponse != null) {
                         val user = loginResponse.user
                         val token = loginResponse.token
-                        val role = user.role // Extract role
+                        val role = user.role
 
                         // Save token in SharedPreferences
                         val sharedPref = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
