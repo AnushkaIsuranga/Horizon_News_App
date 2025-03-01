@@ -21,7 +21,7 @@ class ReporterActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         // Set up Bottom Navigation with NavController
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationReporter)
         bottomNavigationView.setupWithNavController(navController)
     }
 }

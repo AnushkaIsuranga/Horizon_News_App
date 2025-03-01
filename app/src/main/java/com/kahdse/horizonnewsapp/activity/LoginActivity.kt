@@ -1,5 +1,6 @@
 package com.kahdse.horizonnewsapp.activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -42,21 +43,8 @@ class LoginActivity : AppCompatActivity() {
         skipLoginButton = findViewById(R.id.skipLoginButton)
 
         loginButton.setOnClickListener {
-            loginUser { success, token ->
-                if (success) {
-                    if (rememberMeCheckBox.isChecked && token != null) {
-                        // Save token in SharedPreferences
-                        sharedPref.edit().putString("auth_token", token).apply()
-                    }
+            loginUser()
 
-                    // Navigate to UserActivity after login
-                    val intent = Intent(this, UserActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
 
         registerButton.setOnClickListener {
@@ -71,15 +59,20 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun loginUser(callback: (Boolean, String?) -> Unit) {
+    private fun loginUser() {
         val email = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show()
-            callback(false, null)
             return
         }
+
+        // Show progress dialog
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Registering user...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
 
         val request = LoginRequest(email, password)
         val apiService = RetrofitClient.createService(ApiService::class.java)
@@ -92,45 +85,55 @@ class LoginActivity : AppCompatActivity() {
                     val token = loginResponse.token
                     val role = user.role
 
-                    // Save token in SharedPreferences if "Remember Me" is checked
+                    Toast.makeText(applicationContext, "Welcome ${user.first_name}", Toast.LENGTH_SHORT).show()
+
+                    // Save token ONLY if "Remember Me" is checked
                     if (rememberMeCheckBox.isChecked) {
                         sharedPref.edit().putString("TOKEN", token).apply()
+                        saveLoginState(email, role)
+                    } else {
+                        // Remove any previously saved token
+                        sharedPref.edit().remove("TOKEN").apply()
                     }
-
-                    Toast.makeText(applicationContext, "Welcome ${user.first_name}", Toast.LENGTH_SHORT).show()
 
                     // Navigate based on user role
                     val intent = when (role) {
                         "user" -> Intent(this@LoginActivity, UserActivity::class.java)
                         "reporter" -> Intent(this@LoginActivity, ReporterActivity::class.java)
                         else -> {
+                            progressDialog.dismiss()
                             Toast.makeText(applicationContext, "Invalid role", Toast.LENGTH_SHORT).show()
-                            callback(false, null)
                             return
                         }
                     }
-
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
 
-                    // Call success callback with the correct token
-                    callback(true, token)
-
                 } else {
+                    progressDialog.dismiss()
                     val errorMessage = when (response.code()) {
                         400 -> "Invalid credentials"
                         404 -> "User not found"
                         else -> "Login failed: ${response.code()}"
                     }
                     Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_SHORT).show()
-                    callback(false, null) // Call failure callback
                 }
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                progressDialog.dismiss()
                 Toast.makeText(applicationContext, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                callback(false, null) // Call failure callback
             }
         })
+    }
+
+    // Save user login state and role
+    private fun saveLoginState(email: String, role: String) {
+        with(sharedPref.edit()) {
+            putBoolean("isLoggedIn", true)
+            putString("userEmail", email)
+            putString("userRole", role)
+            apply()
+        }
     }
 }

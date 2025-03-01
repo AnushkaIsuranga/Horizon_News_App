@@ -54,18 +54,19 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph_reporter"
+        app:navGraph="@navigation/nav_graph_user"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewReports"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation" />
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationUser" />
 
     <!-- Bottom Navigation Bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigation"
+        android:id="@+id/bottomNavigationUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#004466"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
+        app:labelVisibilityMode="selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_menu_user"
         tools:layout_editor_absoluteX="0dp" />
