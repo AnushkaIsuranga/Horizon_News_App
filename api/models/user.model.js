@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({  // ✅ Change "useSchema" to "userSchema"
+const userSchema = new mongoose.Schema({
     first_name: {
         type: String,
         required: [true, 'First name is required']
@@ -37,14 +36,5 @@ const userSchema = new mongoose.Schema({  // ✅ Change "useSchema" to "userSche
     timestamps: true
 });
 
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    console.log("Hashing password:", this.password);
-    this.password = await bcrypt.hash(this.password, 10);
-    console.log("Hashed password:", this.password);
-    next();
-});
-
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;

@@ -1,7 +1,7 @@
 package com.kahdse.horizonnewsapp
 
-import LoginResponse
 import com.kahdse.horizonnewsapp.model.LoginRequest
+import com.kahdse.horizonnewsapp.model.LoginResponse
 import com.kahdse.horizonnewsapp.model.User
 import com.kahdse.horizonnewsapp.model.UserResponse
 import okhttp3.MultipartBody

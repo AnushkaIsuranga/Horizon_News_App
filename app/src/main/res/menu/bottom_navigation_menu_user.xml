@@ -5,12 +5,10 @@
     <item
         android:id="@+id/nav_news"
         android:icon="@drawable/ic_news"
-        android:title="News"
-        app:showAsAction="ifRoom" />
+        android:title="News" />
 
     <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_settings"
-        android:title="Settings"
-        app:showAsAction="ifRoom" />
+        android:title="Settings" />
 </menu>
