@@ -17,4 +17,9 @@
 .card .titname{
   font-family: Arial, sans-serif;
   margin: 0;
+  color: hsl(0, 0%, 52%);
+}
+.card .crdtxt{
+  font-family: Arial, sans-serif;
+  color: hsl(0, 0%, 30%);
 }
