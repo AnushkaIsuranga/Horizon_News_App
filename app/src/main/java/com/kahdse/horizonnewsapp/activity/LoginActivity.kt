@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -33,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // Initialize SharedPreferences
-        sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        sharedPref = getSharedPreferences("MyPrefs", MODE_PRIVATE)
 
         emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
@@ -70,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Show progress dialog
         val progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Registering user...")
+        progressDialog.setMessage("Logging in...")
         progressDialog.setCancelable(false)
         progressDialog.show()
 
@@ -87,13 +88,16 @@ class LoginActivity : AppCompatActivity() {
 
                     Toast.makeText(applicationContext, "Welcome ${user.first_name}", Toast.LENGTH_SHORT).show()
 
+                    sharedPref.edit().putString("TOKEN", token).commit()
+                    Log.d("DEBUG", "Saved Token: $token")
+                    saveLoginState(email, role)
+
                     // Save token ONLY if "Remember Me" is checked
                     if (rememberMeCheckBox.isChecked) {
-                        sharedPref.edit().putString("TOKEN", token).apply()
-                        saveLoginState(email, role)
+                        sharedPref.edit().putBoolean("isLoggedIn", true).apply()
                     } else {
                         // Remove any previously saved token
-                        sharedPref.edit().remove("TOKEN").apply()
+                        sharedPref.edit().putBoolean("isLoggedIn", false).apply()
                     }
 
                     // Navigate based on user role
@@ -130,7 +134,6 @@ class LoginActivity : AppCompatActivity() {
     // Save user login state and role
     private fun saveLoginState(email: String, role: String) {
         with(sharedPref.edit()) {
-            putBoolean("isLoggedIn", true)
             putString("userEmail", email)
             putString("userRole", role)
             apply()
