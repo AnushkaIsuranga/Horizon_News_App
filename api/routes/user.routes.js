@@ -26,6 +26,9 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
+// Secret key for JWT (store in environment variables for security)
+const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
+
 //Get All Users
 router.get('/', async (req, res) => {
     try {
@@ -89,19 +92,20 @@ router.post('/register', upload.single('profile_pic'), async (req, res) => {
         }
 
         // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password.trim(), 10);
         console.log(`Original Password: ${password}`);
         console.log(`Hashed Password: ${hashedPassword}`);
 
         // Ensure profile picture URL is correctly retrieved
-        const profilePicUrl = req.file ? req.file.path || req.file.secure_url : null
+        const profilePicUrl = req.file ? req.file.path || req.file.secure_url : null;
 
+        // Store user with hashed password
         const user = new User({
             first_name,
             last_name,
             phone,
             email,
-            password: hashedPassword,  // Ensure hashed password is stored
+            password: hashedPassword,  // ✅ Store hashed password
             role,
             profile_pic: profilePicUrl
         });
@@ -115,7 +119,7 @@ router.post('/register', upload.single('profile_pic'), async (req, res) => {
     }
 });
 
-// User Login
+//User Login
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -129,20 +133,22 @@ router.post('/login', async (req, res) => {
         }
 
         console.log(`Stored hashed password: ${user.password}`);
-        console.log(`Entered password: ${req.body.password}`);
+        console.log(`Entered password: ${password}`);
 
-        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        // Compare entered password with stored hash
+        const isMatch = await bcrypt.compare(password.trim(), user.password);
         console.log(`Password comparison result: ${isMatch}`);
 
         if (!isMatch) {
             console.log("Invalid credentials");
-            return res.status(400).json({ message: "Invalid credentials" });
+            return res.status(400).json({ message: "Invalid email or password" });
         }
 
         const token = jwt.sign({ id: user._id, role: user.role }, 'your_secret_key', { expiresIn: '7d' });
 
         console.log("Login successful");
         res.json({ token, user });
+
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({ message: error.message });

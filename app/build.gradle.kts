@@ -67,4 +67,22 @@ dependencies {
     // Navigation Components
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.5")
+
+    //Room Database
+    implementation ("androidx.room:room-runtime:2.5.2")
+    annotationProcessor ("androidx.room:room-compiler:2.5.2")
+    implementation ("androidx.room:room-ktx:2.5.2")
+
+    //RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
+
+    //Scslsble Size Unit (Support for different screen sizes)
+    implementation ("com.intuit.sdp:sdp-android:1.2.0")
+    implementation ("com.intuit.ssp:ssp-android:1.2.0")
+
+    //Material Design
+    implementation ("com.google.android.material:material:1.9.0")
+
+    //Rounded ImageView
+    implementation ("com.makeramen:roundedimageview:2.3.0")
 }
