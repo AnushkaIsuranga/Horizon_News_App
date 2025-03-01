@@ -3,6 +3,7 @@ package com.kahdse.horizonnewsapp.activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -18,6 +19,7 @@ class UserActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("USER_ACTIVITY", "UserActivity started")
         setContentView(R.layout.activity_user)
 
         sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -27,7 +29,7 @@ class UserActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         // Set up Bottom Navigation with NavController
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationUser)
         bottomNavigationView.setupWithNavController(navController)
 
         // Initialize imgProfile

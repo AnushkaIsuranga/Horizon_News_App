@@ -126,9 +126,11 @@ class RegisterActivity : AppCompatActivity() {
                     profilePicPart = MultipartBody.Part.createFormData("profile_pic", file.name, requestFile)
                 } else {
                     Log.e("RegisterActivity", "File does not exist: $filePath")
+                    progressDialog.dismiss()
                 }
             } else {
                 Log.e("RegisterActivity", "Failed to get real path from URI")
+                progressDialog.dismiss()
             }
         }
 
@@ -156,6 +158,7 @@ class RegisterActivity : AppCompatActivity() {
                     val errorBody = response.errorBody()?.string()
                     Log.e("RegisterActivity", "Registration Failed: ${response.code()} - $errorBody")
                     Toast.makeText(this@RegisterActivity, "Registration Failed: ${response.code()}", Toast.LENGTH_LONG).show()
+                    progressDialog.dismiss()
                 }
             }
 
@@ -163,6 +166,7 @@ class RegisterActivity : AppCompatActivity() {
                 progressDialog.dismiss()
                 Log.e("RegisterActivity", "API Call Failed: ${t.localizedMessage}", t)
                 Toast.makeText(this@RegisterActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
+                progressDialog.dismiss()
             }
         })
     }
