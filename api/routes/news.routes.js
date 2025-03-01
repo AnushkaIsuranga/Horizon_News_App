@@ -1,22 +1,54 @@
 const express = require('express');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const News = require('../models/news.model');
 const { authMiddleware, isEditor, isReporter } = require('../middleware/auth');
 const router = express.Router();
+const app = express();
+
+//Configure Cloudinary
+cloudinary.config({
+    cloud_name: 'dkpre5kis',
+    api_key: '832397485563889',
+    api_secret: '5o9oI98AvyvnMoKBa6vlEa0xqZY'
+});
+
+//Set Up Multer Storage for Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'profile_pics', // Change folder name as needed
+        allowed_formats: ['jpg', 'png', 'jpeg']
+    }
+});
+
+const upload = multer({ storage });
 
 // Create a news report (Reporter only)
-router.post('/', authMiddleware, isReporter, async (req, res) => {
+router.post('/create', authMiddleware, isReporter, upload.single('cover_photo'), async (req, res) => {
     try {
-        const { title, content, cover_photo } = req.body;
-        const news = new News({
+        const { title, content } = req.body;
+
+        if (!title || !content || !req.file) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        // Cloudinary automatically generates a secure URL
+        const coverPhotoUrl = req.file.path || req.file.secure_url;
+
+        const report = new News({
             title,
             content,
-            cover_photo,
+            cover_photo: coverPhotoUrl,
             reporter: req.user._id
         });
 
-        await news.save();
-        res.status(201).json(news);
+        await report.save();
+        res.status(201).json({ message: "Report created successfully", report });
+
     } catch (error) {
+        console.error("Error creating report:", error);
         res.status(500).json({ message: error.message });
     }
 });

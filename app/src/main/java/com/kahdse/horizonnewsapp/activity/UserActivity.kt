@@ -35,14 +35,15 @@ class UserActivity : AppCompatActivity() {
         // Initialize imgProfile
         val imgProfile = findViewById<ImageView>(R.id.imgProfile)
         imgProfile.setOnClickListener {
-            val token = sharedPref.getString("TOKEN", null)
+            val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
+            Log.d("USER_ACTIVITY", "Profile clicked. Token: $isLoggedIn")
 
-            if (token.isNullOrEmpty()) {
-                // Open LoginActivity if not logged in
+            if (!isLoggedIn) {
+                Log.d("USER_ACTIVITY", "No token found. Redirecting to LoginActivity")
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             } else {
-                // Navigate to ProfileFragment
+                Log.d("USER_ACTIVITY", "Token found. Navigating to ProfileFragment")
                 navController.navigate(R.id.nav_profile)
             }
         }

@@ -10,8 +10,8 @@
         android:label="Draft"
         tools:layout="@layout/fragment_draft">
         <action
-            android:id="@+id/action_nav_draft_to_nav_pending"
-            app:destination="@id/nav_pending"
+            android:id="@+id/action_draftFragment_to_createReportFragment"
+            app:destination="@id/nav_create_report"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -25,7 +25,7 @@
         tools:layout="@layout/fragment_pending">
         <action
             android:id="@+id/action_nav_draft_to_nav_pending"
-            app:destination="@id/nav_pending"
+            app:destination="@id/nav_approved"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -39,7 +39,7 @@
         tools:layout="@layout/fragment_approved">
         <action
             android:id="@+id/action_nav_draft_to_nav_pending"
-            app:destination="@id/nav_pending"
+            app:destination="@id/nav_settings"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -53,7 +53,7 @@
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_nav_draft_to_nav_pending"
-            app:destination="@id/nav_pending"
+            app:destination="@id/nav_settings"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -72,6 +72,19 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_create_report"
+        android:name="com.kahdse.horizonnewsapp.fragment.CreateReportFragment"
+        android:label="Create Report"
+        tools:layout="@layout/fragment_create_report">
+        <action
+            android:id="@+id/action_nav_draft_to_nav_pending"
+            app:destination="@id/nav_create_report"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
 </navigation>
