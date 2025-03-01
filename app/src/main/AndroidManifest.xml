@@ -33,7 +33,14 @@
             android:name="com.kahdse.horizonnewsapp.activity.RegisterActivity"
             android:exported="true">
         </activity>
-
+        <activity
+            android:name="com.kahdse.horizonnewsapp.activity.ReporterActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name="com.kahdse.horizonnewsapp.activity.UserActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

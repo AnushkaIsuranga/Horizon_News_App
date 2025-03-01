@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://horizon-news-app.vercel.app/" // Replace with your API URL
+    private const val BASE_URL = "https://horizon-news-api.vercel.app/" // Replace with your API URL
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()

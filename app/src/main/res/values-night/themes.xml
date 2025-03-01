@@ -3,5 +3,13 @@
     <style name="Base.Theme.HorizonNewsApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <resources xmlns:tools="http://schemas.android.com/tools">
+            <style name="Theme.HorizonNews" parent="Theme.Material3.DayNight">
+                <item name="android:colorBackground">?android:attr/colorBackground</item>
+                <item name="android:windowBackground">?android:attr/colorBackground</item>
+            </style>
+        </resources>
+
     </style>
 </resources>
