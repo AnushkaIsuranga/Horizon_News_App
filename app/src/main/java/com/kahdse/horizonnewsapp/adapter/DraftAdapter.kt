@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.kahdse.horizonnewsapp.R
 import com.kahdse.horizonnewsapp.model.Draft
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DraftAdapter(
     private val onDraftClick: (Draft) -> Unit,
@@ -27,6 +30,11 @@ class DraftAdapter(
         holder.bind(draft)
     }
 
+    fun formatDateTime(timestamp: Long): String {
+        val sdf = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
+        return sdf.format(Date(timestamp))
+    }
+
     inner class DraftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvDraftTitle: TextView = itemView.findViewById(R.id.tvDraftTitle)
         private val tvCreatedDate: TextView = itemView.findViewById(R.id.tvCreatedDate)
@@ -35,8 +43,8 @@ class DraftAdapter(
 
         fun bind(draft: Draft) {
             tvDraftTitle.text = draft.title
-            tvCreatedDate.text = "Created: ${draft.createdDate}"
-            tvLastAccessed.text = "Last Accessed: ${draft.lastAccessed}"
+            tvCreatedDate.text = "Created: ${formatDateTime(draft.createdDate)}"
+            tvLastAccessed.text = "Last Accessed: ${formatDateTime(draft.lastAccessed)}"
 
             itemView.setOnClickListener { onDraftClick(draft) }
             btnDeleteDraft.setOnClickListener { onDeleteClick(draft) }

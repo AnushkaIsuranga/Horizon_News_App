@@ -14,16 +14,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.room.Room
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.kahdse.horizonnewsapp.ApiService
-import com.kahdse.horizonnewsapp.AppDatabase
-import com.kahdse.horizonnewsapp.DraftRepository
+import com.kahdse.horizonnewsapp.utils.ApiService
+import com.kahdse.horizonnewsapp.utils.DBHelper
 import com.kahdse.horizonnewsapp.R
 import com.kahdse.horizonnewsapp.activity.ReporterActivity
 import com.kahdse.horizonnewsapp.model.Draft
 import com.kahdse.horizonnewsapp.network.RetrofitClient
+import com.kahdse.horizonnewsapp.repository.DraftRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,10 +41,11 @@ class CreateReportFragment : Fragment() {
     private lateinit var ivCoverPhoto: ImageView
     private lateinit var btnSubmit: View
 
+    private var draftId: Int? = null
     private var selectedImageUri: Uri? = null
     private val apiService = RetrofitClient.retrofit.create(ApiService::class.java)
     private lateinit var draftRepository: DraftRepository
-    private lateinit var database: AppDatabase
+    private lateinit var database: DBHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,14 +53,11 @@ class CreateReportFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_create_report, container, false)
 
-        // Initialize Room Database
-        database = Room.databaseBuilder(
-            requireContext(),
-            AppDatabase::class.java, "horizonnews_db"
-        ).build()
+        // Initialize SQLite Database Helper
+        database = DBHelper(requireContext())
 
-        // Initialize DraftRepository
-        draftRepository = DraftRepository(database.draftDao())
+        // Initialize DraftRepository (assuming it now uses SQLite)
+        draftRepository = DraftRepository(requireContext())
 
         return view
     }
@@ -79,6 +76,18 @@ class CreateReportFragment : Fragment() {
 
         btnSubmit.setOnClickListener {
             submitReport()
+        }
+
+        // Restore Draft if exists
+        val draftId = arguments?.getInt("draftId", -1)
+        val title = arguments?.getString("title", "")
+        val content = arguments?.getString("content", "")
+        val imageUri = arguments?.getString("imageUri", null)
+
+        if (draftId != null && draftId != -1) {
+            etTitle.setText(title)
+            etContent.setText(content)
+            imageUri?.let { ivCoverPhoto.setImageURI(Uri.parse(it)) }
         }
     }
 
@@ -109,7 +118,9 @@ class CreateReportFragment : Fragment() {
         requireActivity().findViewById<LinearLayout>(R.id.topBar)?.visibility = View.VISIBLE
         requireActivity().findViewById<FloatingActionButton>(R.id.btnCreateReport)?.visibility = View.VISIBLE
 
-        saveDraft()
+        if (draftId == null) {
+            saveDraft()
+        }
     }
 
     private fun saveDraft() {
@@ -120,6 +131,7 @@ class CreateReportFragment : Fragment() {
         if (title.isEmpty() && content.isEmpty() && imageUriStr == null) return
 
         val draft = Draft(
+            id = draftId ?: 0,
             title = title,
             content = content,
             imageUri = imageUriStr,
@@ -128,8 +140,16 @@ class CreateReportFragment : Fragment() {
         )
 
         CoroutineScope(Dispatchers.IO).launch {
-            draftRepository.saveDraft(draft)
-            Log.d("Draft", "Draft saved!")
+            try {
+                if (draftId == null) {
+                    draftRepository.saveDraft(draft) // Save New Draft
+                } else {
+                    draftRepository.updateDraft(draft) // Update Existing Draft
+                }
+                Log.d("Draft", "Draft successfully saved!")
+            } catch (e: Exception) {
+                Log.e("Draft", "Error saving draft: ${e.message}")
+            }
         }
     }
 
@@ -176,7 +196,7 @@ class CreateReportFragment : Fragment() {
         val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
         val imagePart = MultipartBody.Part.createFormData("cover_photo", imageFile.name, requestFile)
 
-        // ✅ Use the authentication token in the API request
+        // Use the authentication token in the API request
         apiService.createReport("Bearer $token", titleBody, contentBody, imagePart)
             .enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {

@@ -10,7 +10,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.kahdse.horizonnewsapp.ApiService
+import com.kahdse.horizonnewsapp.utils.ApiService
 import com.kahdse.horizonnewsapp.R
 import com.kahdse.horizonnewsapp.model.LoginRequest
 import com.kahdse.horizonnewsapp.model.LoginResponse
