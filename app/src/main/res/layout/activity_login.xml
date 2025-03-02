@@ -73,12 +73,19 @@
         app:cornerRadius="16dp"
         android:layout_marginTop="8dp"/>
 
+    <!-- FIXED: Removed duplicate attributes -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/skipLoginButton"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Skip Login"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_marginTop="8dp"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_launcher_foreground" />
 
 </LinearLayout>
