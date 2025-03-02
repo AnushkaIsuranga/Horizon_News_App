@@ -84,6 +84,24 @@ router.get('/approved', async (req, res) => {
     }
 });
 
+// Get all pending reports (Visible to normal users)
+router.get('/pending', async (req, res) => {
+    try {
+        const reports = await News.find({ status: 'pending' })
+            .sort({ recommendation_level: -1 }) // Sort by editor rating
+            .populate('reporter', 'first_name last_name')
+            .populate('user_comments.user', 'first_name last_name')
+            .lean(); // Convert to plain JS object
+
+        res.json(reports.map(report => ({
+            ...report,
+            averageRating: report.averageRating // Explicitly include virtual field
+        })));
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Get a single news article (with comments & ratings)
 router.get('/:id', async (req, res) => {
     try {
