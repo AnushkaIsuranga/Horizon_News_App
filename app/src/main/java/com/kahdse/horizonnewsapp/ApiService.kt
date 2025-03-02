@@ -1,13 +1,13 @@
 package com.kahdse.horizonnewsapp
 
-import LoginResponse
 import com.kahdse.horizonnewsapp.model.LoginRequest
-import com.kahdse.horizonnewsapp.model.User
+import com.kahdse.horizonnewsapp.model.LoginResponse
 import com.kahdse.horizonnewsapp.model.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -27,4 +27,14 @@ interface ApiService {
 
     @POST("api/users/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
+
+
+    @Multipart
+    @POST("api/news/create")
+    fun createReport(
+        @Header("Authorization") authToken: String,  // Add this line
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part coverPhoto: MultipartBody.Part
+    ): Call<Void>
 }

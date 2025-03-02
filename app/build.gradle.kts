@@ -67,4 +67,44 @@ dependencies {
     // Navigation Components
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.5")
+
+    //Room Database
+    implementation ("androidx.room:room-runtime:2.5.2")
+    annotationProcessor ("androidx.room:room-compiler:2.5.2")
+    implementation ("androidx.room:room-ktx:2.5.2")
+
+    //RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
+
+    //Scslsble Size Unit (Support for different screen sizes)
+    implementation ("com.intuit.sdp:sdp-android:1.1.1")
+    implementation ("com.intuit.ssp:ssp-android:1.1.1")
+
+    //Material Design
+    implementation ("com.google.android.material:material:1.9.0")
+
+    //Rounded ImageView
+    implementation ("com.makeramen:roundedimageview:2.3.0")
+
+    //Jetpack Compose
+    implementation ("androidx.compose.material:material")
+    implementation ("androidx.compose.foundation:foundation")
+    implementation ("androidx.compose.ui:ui")
+
+    // Android Studio Preview support
+    implementation ("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation ("androidx.compose.ui:ui-tooling")
+
+    // UI Tests
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest")
+
+    // Optional - Integration with activities
+    implementation ("androidx.activity:activity-compose:1.10.0")
+    // Optional - Integration with ViewModels
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
+    // Optional - Integration with LiveData
+    implementation ("androidx.compose.runtime:runtime-livedata")
+    // Optional - Integration with RxJava
+    implementation ("androidx.compose.runtime:runtime-rxjava2")
 }
