@@ -27,7 +27,7 @@ class DraftAdapter(
 
     override fun onBindViewHolder(holder: DraftViewHolder, position: Int) {
         val draft = getItem(position)
-        holder.bind(draft)
+        holder.bind(draft, onDraftClick, onDeleteClick)
     }
 
     fun formatDateTime(timestamp: Long): String {
@@ -41,13 +41,13 @@ class DraftAdapter(
         private val tvLastAccessed: TextView = itemView.findViewById(R.id.tvLastAccessed)
         private val btnDeleteDraft: Button = itemView.findViewById(R.id.btnDeleteDraft)
 
-        fun bind(draft: Draft) {
+        fun bind(draft: Draft, onDraftClick: (Draft) -> Unit, onDeleteClick: (Draft) -> Unit) {
             tvDraftTitle.text = draft.title
             tvCreatedDate.text = "Created: ${formatDateTime(draft.createdDate)}"
             tvLastAccessed.text = "Last Accessed: ${formatDateTime(draft.lastAccessed)}"
 
-            itemView.setOnClickListener { onDraftClick(draft) }
-            btnDeleteDraft.setOnClickListener { onDeleteClick(draft) }
+            itemView.setOnClickListener { this@DraftAdapter.onDraftClick(draft) }
+            btnDeleteDraft.setOnClickListener { this@DraftAdapter.onDeleteClick(draft) }
         }
     }
 

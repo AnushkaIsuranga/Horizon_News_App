@@ -9,6 +9,7 @@ data class Draft(
     val title: String,
     val content: String,
     val imageUri: String?,
+    val category: String?,
     val createdDate: Long,
     val lastAccessed: Long
 )

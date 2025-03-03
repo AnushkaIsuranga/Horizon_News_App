@@ -71,17 +71,16 @@ class DraftFragment : Fragment() {
 
             withContext(Dispatchers.Main) {
                 draftAdapter.submitList(drafts)
+                draftAdapter.notifyDataSetChanged()
                 tvNoDrafts.visibility = if (drafts.isEmpty()) View.VISIBLE else View.GONE
             }
         }
     }
 
+
     private fun openDraft(draft: Draft) {
         val bundle = Bundle().apply {
             putInt("draftId", draft.id)
-            putString("title", draft.title)
-            putString("content", draft.content)
-            putString("imageUri", draft.imageUri)
         }
         findNavController().navigate(R.id.action_draftFragment_to_createReportFragment, bundle)
     }

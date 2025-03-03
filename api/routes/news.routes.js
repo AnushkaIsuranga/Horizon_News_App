@@ -28,9 +28,9 @@ const upload = multer({ storage });
 // Create a news report (Reporter only)
 router.post('/create', authMiddleware, isReporter, upload.single('cover_photo'), async (req, res) => {
     try {
-        const { title, content } = req.body;
+        const { title, content, category } = req.body;
 
-        if (!title || !content || !req.file) {
+        if (!title || !content || !req.file || !category) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -41,6 +41,7 @@ router.post('/create', authMiddleware, isReporter, upload.single('cover_photo'),
             title,
             content,
             cover_photo: coverPhotoUrl,
+            category,
             reporter: req.user._id
         });
 
@@ -99,6 +100,50 @@ router.get('/pending', async (req, res) => {
         })));
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+});
+
+router.get('/', authMiddleware, async (req, res) => {
+    try {
+        const { category } = req.query; // Get category from query params
+        let filter = {};
+        if (category) {
+            filter.category = category;
+        }
+
+        const newsList = await News.find(filter)
+            .populate('reporter', 'first_name last_name')
+            .populate('user_comments.user', 'first_name last_name profile_pic');
+
+        res.status(200).json(newsList);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Search reports by title
+router.get("/search", authMiddleware, async (req, res) => {
+    try {
+        const { query } = req.query; // Get search query from request
+
+        if (!query) {
+            return res.status(400).json({ message: "Search query is required." });
+        }
+
+        // Perform a case-insensitive search on titles using a regular expression
+        const reports = await Report.find({
+            title: { $regex: query, $options: "i" },
+            status: "approved"
+        });
+
+        const reports = await Report.find(filter)
+            .sort({ createdAt: -1 }) // Sort by most recent first
+            .populate("reporter", "firstName lastName"); // Populate reporter details
+
+        res.json({ success: true, reports });
+    } catch (error) {
+        console.error("Search error:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 });
 

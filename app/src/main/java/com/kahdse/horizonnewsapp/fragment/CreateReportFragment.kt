@@ -13,8 +13,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kahdse.horizonnewsapp.utils.ApiService
 import com.kahdse.horizonnewsapp.utils.DBHelper
@@ -26,6 +29,7 @@ import com.kahdse.horizonnewsapp.repository.DraftRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -40,18 +44,28 @@ class CreateReportFragment : Fragment() {
     private lateinit var etContent: EditText
     private lateinit var ivCoverPhoto: ImageView
     private lateinit var btnSubmit: View
+    private lateinit var draftRepository: DraftRepository
+    private lateinit var database: DBHelper
+    private lateinit var chipGroupCategories: ChipGroup
 
     private var draftId: Int? = null
     private var selectedImageUri: Uri? = null
     private val apiService = RetrofitClient.retrofit.create(ApiService::class.java)
-    private lateinit var draftRepository: DraftRepository
-    private lateinit var database: DBHelper
+    private var selectedCategory: String? = null
+    private val categories = listOf(
+        "Sports", "Technology", "Politics", "Gossip",
+        "Weather", "Business", "Entertainment", "Lifestyle"
+    )
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_create_report, container, false)
+
+        chipGroupCategories = view.findViewById(R.id.chipGroupCategories)
+        setupCategoryChips()
 
         // Initialize SQLite Database Helper
         database = DBHelper(requireContext())
@@ -67,28 +81,67 @@ class CreateReportFragment : Fragment() {
 
         etTitle = view.findViewById(R.id.etTitle)
         etContent = view.findViewById(R.id.etContent)
+        chipGroupCategories = view.findViewById(R.id.chipGroupCategories)
         ivCoverPhoto = view.findViewById(R.id.ivCoverPhoto)
         btnSubmit = view.findViewById(R.id.btnSubmit)
 
-        ivCoverPhoto.setOnClickListener {
-            openGallery()
-        }
+        ivCoverPhoto.setOnClickListener { openGallery() }
+        btnSubmit.setOnClickListener { submitReport() }
 
-        btnSubmit.setOnClickListener {
-            submitReport()
-        }
+        // Retrieve the draftId from the arguments
+        draftId = arguments?.getInt("draftId", -1) ?: -1
 
-        // Restore Draft if exists
-        val draftId = arguments?.getInt("draftId", -1)
-        val title = arguments?.getString("title", "")
-        val content = arguments?.getString("content", "")
-        val imageUri = arguments?.getString("imageUri", null)
+        setupCategoryChips() // ✅ Load chips only once
 
         if (draftId != null && draftId != -1) {
-            etTitle.setText(title)
-            etContent.setText(content)
-            imageUri?.let { ivCoverPhoto.setImageURI(Uri.parse(it)) }
+            loadDraft(draftId!!) // ✅ Load draft properly
         }
+    }
+
+    private fun loadDraft(draftId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val draft = draftRepository.getDraftById(draftId)
+            draft?.let {
+                withContext(Dispatchers.Main) {
+                    etTitle.setText(it.title)
+                    etContent.setText(it.content)
+                    selectedImageUri = it.imageUri?.toUri()
+                    selectedCategory = it.category
+
+                    // Set the image if the URI is not null
+                    selectedImageUri?.let { uri ->
+                        ivCoverPhoto.setImageURI(uri)
+                    }
+
+                    // Restore the selected category chip
+                    restoreChipSelection(selectedCategory)
+                }
+            }
+        }
+    }
+
+    private fun restoreChipSelection(selectedCategory: String?) {
+        for (i in 0 until chipGroupCategories.childCount) {
+            val chip = chipGroupCategories.getChildAt(i) as Chip
+            chip.isChecked = chip.text.toString() == selectedCategory
+        }
+    }
+
+    private fun setupCategoryChips() {
+        chipGroupCategories.removeAllViews()
+        for (category in categories) {
+            val chip = Chip(requireContext()).apply {
+                text = category
+                isCheckable = true
+                isChecked = category == selectedCategory // ✅ Ensures pre-selection works
+                setOnClickListener {
+                    selectedCategory = if (isChecked) category else null
+                }
+            }
+            chipGroupCategories.addView(chip)
+        }
+
+        restoreChipSelection(selectedCategory) // ✅ Ensure correct chip is selected
     }
 
     private fun openGallery() {
@@ -118,37 +171,74 @@ class CreateReportFragment : Fragment() {
         requireActivity().findViewById<LinearLayout>(R.id.topBar)?.visibility = View.VISIBLE
         requireActivity().findViewById<FloatingActionButton>(R.id.btnCreateReport)?.visibility = View.VISIBLE
 
-        if (draftId == null) {
-            saveDraft()
+        if (draftId != null && draftId != -1) {
+            saveDraft() // ✅ Update the draft instead of creating a new one
+        } else {
+            saveNewDraft()
         }
     }
+
 
     private fun saveDraft() {
         val title = etTitle.text.toString().trim()
         val content = etContent.text.toString().trim()
         val imageUriStr = selectedImageUri?.toString()
+        val category = selectedCategory
 
-        if (title.isEmpty() && content.isEmpty() && imageUriStr == null) return
+        if (title.isEmpty() && content.isEmpty() && imageUriStr == null && category.isNullOrEmpty()) return
+
+        CoroutineScope(Dispatchers.IO).launch {
+            draftId?.let { id ->
+                val existingDraft = draftRepository.getDraftById(id)
+                if (existingDraft != null) {
+                    val draft = Draft(
+                        id = id,
+                        title = title,
+                        content = content,
+                        imageUri = imageUriStr,
+                        category = category,
+                        createdDate = existingDraft.createdDate,
+                        lastAccessed = System.currentTimeMillis()
+                    )
+
+                    try {
+                        draftRepository.updateDraft(draft)
+                        Log.d("Draft", "Draft updated successfully!")
+                    } catch (e: Exception) {
+                        Log.e("Draft", "Error updating draft: ${e.message}")
+                    }
+                }
+            } ?: run {
+                saveNewDraft() // Only call this if draftId is null
+            }
+        }
+    }
+
+    private fun saveNewDraft() {
+        val title = etTitle.text.toString().trim()
+        val content = etContent.text.toString().trim()
+        val imageUriStr = selectedImageUri?.toString()
+        val category = selectedCategory
+
+        if (title.isEmpty() && content.isEmpty() && imageUriStr == null && category.isNullOrEmpty()) return
 
         val draft = Draft(
-            id = draftId ?: 0,
+            id = 0, // ✅ SQLite will auto-generate ID
             title = title,
             content = content,
             imageUri = imageUriStr,
+            category = category,
             createdDate = System.currentTimeMillis(),
             lastAccessed = System.currentTimeMillis()
         )
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                if (draftId == null) {
-                    draftRepository.saveDraft(draft) // Save New Draft
-                } else {
-                    draftRepository.updateDraft(draft) // Update Existing Draft
-                }
-                Log.d("Draft", "Draft successfully saved!")
+                val newId = draftRepository.saveDraft(draft).toInt() // ✅ Store generated ID
+                draftId = newId // ✅ Assign to prevent duplicate drafts!
+                Log.d("Draft", "New draft created with ID: $newId")
             } catch (e: Exception) {
-                Log.e("Draft", "Error saving draft: ${e.message}")
+                Log.e("Draft", "Error creating draft: ${e.message}")
             }
         }
     }
@@ -156,30 +246,27 @@ class CreateReportFragment : Fragment() {
     private fun submitReport() {
         val title = etTitle.text.toString().trim()
         val content = etContent.text.toString().trim()
+        val category = selectedCategory
 
-        if (title.isEmpty() || content.isEmpty() || selectedImageUri == null) {
-            Toast.makeText(requireContext(), "All fields are required!", Toast.LENGTH_SHORT).show()
+        if (title.isEmpty() || content.isEmpty() || selectedImageUri == null || category.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "All fields, including category, are required!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Retrieve token and role from SharedPreferences
         val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Activity.MODE_PRIVATE)
         val token = sharedPreferences.getString("TOKEN", null)
         val role = sharedPreferences.getString("userRole", null)
 
-        // Check if user is authenticated
         if (token.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Authentication required. Please log in.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Check if user is a reporter
         if (role != "reporter") {
             Toast.makeText(requireContext(), "Access denied! Only reporters can submit reports.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Show progress dialog
         val progressDialog = ProgressDialog(requireContext())
         progressDialog.setMessage("Submitting report...")
         progressDialog.setCancelable(false)
@@ -193,23 +280,21 @@ class CreateReportFragment : Fragment() {
 
         val titleBody = RequestBody.create("text/plain".toMediaTypeOrNull(), title)
         val contentBody = RequestBody.create("text/plain".toMediaTypeOrNull(), content)
+        val categoryBody = RequestBody.create("text/plain".toMediaTypeOrNull(), category)
         val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
         val imagePart = MultipartBody.Part.createFormData("cover_photo", imageFile.name, requestFile)
 
-        // Use the authentication token in the API request
-        apiService.createReport("Bearer $token", titleBody, contentBody, imagePart)
+        apiService.createReport("Bearer $token", titleBody, contentBody, categoryBody, imagePart)
             .enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    progressDialog.dismiss()
                     if (response.isSuccessful) {
                         Toast.makeText(requireContext(), "Report submitted successfully!", Toast.LENGTH_SHORT).show()
-
-                        // Navigate back to ReporterActivity
                         val intent = Intent(requireContext(), ReporterActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         requireActivity().finish()
                     } else {
-                        progressDialog.dismiss()
                         val errorBody = response.errorBody()?.string()
                         Log.e("CreateReportFragment", "Failed response: Code ${response.code()}, Body: $errorBody")
                         Toast.makeText(requireContext(), "Failed to submit report! Code: ${response.code()}", Toast.LENGTH_SHORT).show()

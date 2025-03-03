@@ -14,6 +14,7 @@ class DBHelper(context: Context) :
                     "$COLUMN_TITLE TEXT, " +
                     "$COLUMN_CONTENT TEXT, " +
                     "$COLUMN_IMAGE_URI TEXT, " +
+                    "$COLUMN_CATEGORY TEXT, " +
                     "$COLUMN_CREATED_DATE INTEGER, " +
                     "$COLUMN_LAST_ACCESSED INTEGER)"
         )
@@ -26,13 +27,14 @@ class DBHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "drafts.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         const val TABLE_DRAFTS = "drafts"
         const val COLUMN_ID = "id"
         const val COLUMN_TITLE = "title"
         const val COLUMN_CONTENT = "content"
         const val COLUMN_IMAGE_URI = "imageUri"
+        const val COLUMN_CATEGORY = "category"
         const val COLUMN_CREATED_DATE = "createdDate"
         const val COLUMN_LAST_ACCESSED = "lastAccessed"
     }
