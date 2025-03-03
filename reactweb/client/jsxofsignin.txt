@@ -1,0 +1,16 @@
+return(
+        <div class="container">
+            <div class="card">
+                <img src={logo} class="img"alt="logo"></img>
+                <h2 class="title">
+                 Admin Panal
+                </h2>
+                <form action="submit" method="post">
+                    <label class="sechead">Email</label><br/>
+                    <input type="Email" class="emailin"></input><br/>
+                    <label class="sechead">Password</label><br/>
+                    <input type="Password" class="parsin"></input><br/>
+                </form>
+            </div>
+        </div>
+    );
