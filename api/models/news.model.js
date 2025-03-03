@@ -9,6 +9,12 @@ const newsSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
+    category: {
+        type: String,
+        enum: ['sports', 'technology', 'politics', 'gossip', 'weather', 'bussiness', 'entertainment', 'lifestyle'],
+        required: true
+    },
+
     cover_photo: { 
         type: String, 
         required: true 

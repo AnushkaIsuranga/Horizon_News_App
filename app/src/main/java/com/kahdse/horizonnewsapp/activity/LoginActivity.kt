@@ -36,6 +36,25 @@ class LoginActivity : AppCompatActivity() {
         // Initialize SharedPreferences
         sharedPref = getSharedPreferences("MyPrefs", MODE_PRIVATE)
 
+        // Check if the user is logged in
+        val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
+        val userRole = sharedPref.getString("userRole", "")
+
+        if (isLoggedIn) {
+            // Redirect to the correct activity based on the stored role
+            val intent = when (userRole) {
+                "reporter" -> Intent(this, ReporterActivity::class.java)
+                "user" -> Intent(this, UserActivity::class.java)
+                else -> null
+            }
+
+            if (intent != null) {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                return
+            }
+        }
+
         emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
         rememberMeCheckBox = findViewById(R.id.rememberMeCheckBox)
@@ -88,15 +107,19 @@ class LoginActivity : AppCompatActivity() {
 
                     Toast.makeText(applicationContext, "Welcome ${user.first_name}", Toast.LENGTH_SHORT).show()
 
-                    sharedPref.edit().putString("TOKEN", token).commit()
-                    Log.d("DEBUG", "Saved Token: $token")
-                    saveLoginState(email, role)
+                    // Save user details in SharedPreferences
+                    with(sharedPref.edit()) {
+                        putString("TOKEN", token)
+                        putString("userEmail", user.email)
+                        putString("userRole", role)
+                        putString("FirstName", user.first_name)  // 🔹 Store first name here
+                        apply()
+                    }
 
                     // Save token ONLY if "Remember Me" is checked
                     if (rememberMeCheckBox.isChecked) {
                         sharedPref.edit().putBoolean("isLoggedIn", true).apply()
                     } else {
-                        // Remove any previously saved token
                         sharedPref.edit().putBoolean("isLoggedIn", false).apply()
                     }
 
@@ -129,14 +152,5 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-    }
-
-    // Save user login state and role
-    private fun saveLoginState(email: String, role: String) {
-        with(sharedPref.edit()) {
-            putString("userEmail", email)
-            putString("userRole", role)
-            apply()
-        }
     }
 }
