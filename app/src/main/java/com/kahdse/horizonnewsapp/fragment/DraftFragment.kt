@@ -77,7 +77,6 @@ class DraftFragment : Fragment() {
         }
     }
 
-
     private fun openDraft(draft: Draft) {
         val bundle = Bundle().apply {
             putInt("draftId", draft.id)

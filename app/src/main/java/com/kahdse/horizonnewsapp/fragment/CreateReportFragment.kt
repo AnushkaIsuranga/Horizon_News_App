@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -56,7 +57,6 @@ class CreateReportFragment : Fragment() {
         "Sports", "Technology", "Politics", "Gossip",
         "Weather", "Business", "Entertainment", "Lifestyle"
     )
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -165,19 +165,21 @@ class CreateReportFragment : Fragment() {
         requireActivity().findViewById<FloatingActionButton>(R.id.btnCreateReport)?.visibility = View.GONE
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
+
+        // Save the draft when the fragment is no longer visible
+        if (draftId != null && draftId != -1) {
+            saveDraft() // Update the draft
+        } else {
+            saveNewDraft() // Create a new draft
+        }
+
+        // Restore visibility of UI elements
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationReporter)?.visibility = View.VISIBLE
         requireActivity().findViewById<LinearLayout>(R.id.topBar)?.visibility = View.VISIBLE
         requireActivity().findViewById<FloatingActionButton>(R.id.btnCreateReport)?.visibility = View.VISIBLE
-
-        if (draftId != null && draftId != -1) {
-            saveDraft() // ✅ Update the draft instead of creating a new one
-        } else {
-            saveNewDraft()
-        }
     }
-
 
     private fun saveDraft() {
         val title = etTitle.text.toString().trim()
@@ -185,7 +187,11 @@ class CreateReportFragment : Fragment() {
         val imageUriStr = selectedImageUri?.toString()
         val category = selectedCategory
 
-        if (title.isEmpty() && content.isEmpty() && imageUriStr == null && category.isNullOrEmpty()) return
+        // Only save if there's meaningful data
+        if (title.isEmpty() && content.isEmpty() && imageUriStr == null && category.isNullOrEmpty()) {
+            Log.d("Draft", "No changes to save")
+            return
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             draftId?.let { id ->
@@ -204,12 +210,15 @@ class CreateReportFragment : Fragment() {
                     try {
                         draftRepository.updateDraft(draft)
                         Log.d("Draft", "Draft updated successfully!")
+
+                        // Notify DraftFragment to refresh
+                        withContext(Dispatchers.Main) {
+                            findNavController().previousBackStackEntry?.savedStateHandle?.set("refreshDrafts", true)
+                        }
                     } catch (e: Exception) {
                         Log.e("Draft", "Error updating draft: ${e.message}")
                     }
                 }
-            } ?: run {
-                saveNewDraft() // Only call this if draftId is null
             }
         }
     }
@@ -220,10 +229,14 @@ class CreateReportFragment : Fragment() {
         val imageUriStr = selectedImageUri?.toString()
         val category = selectedCategory
 
-        if (title.isEmpty() && content.isEmpty() && imageUriStr == null && category.isNullOrEmpty()) return
+        // Only save if there's meaningful data
+        if (title.isEmpty() && content.isEmpty() && imageUriStr == null && category.isNullOrEmpty()) {
+            Log.d("Draft", "No data to save as a new draft")
+            return
+        }
 
         val draft = Draft(
-            id = 0, // ✅ SQLite will auto-generate ID
+            id = 0, // SQLite will auto-generate ID
             title = title,
             content = content,
             imageUri = imageUriStr,
@@ -234,9 +247,14 @@ class CreateReportFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val newId = draftRepository.saveDraft(draft).toInt() // ✅ Store generated ID
-                draftId = newId // ✅ Assign to prevent duplicate drafts!
+                val newId = draftRepository.saveDraft(draft).toInt()
+                draftId = newId // Assign the new ID to prevent duplicate drafts
                 Log.d("Draft", "New draft created with ID: $newId")
+
+                // Notify DraftFragment to refresh
+                withContext(Dispatchers.Main) {
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set("refreshDrafts", true)
+                }
             } catch (e: Exception) {
                 Log.e("Draft", "Error creating draft: ${e.message}")
             }
