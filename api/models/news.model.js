@@ -11,7 +11,7 @@ const newsSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['sports', 'technology', 'politics', 'gossip', 'weather', 'bussiness', 'entertainment', 'lifestyle'],
+        enum: ['Sports', 'Technology', 'Politics', 'Gossip', 'Weather', 'Business', 'Entertainment', 'Lifestyle'],
         required: true
     },
 

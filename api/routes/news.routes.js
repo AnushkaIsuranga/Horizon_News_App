@@ -130,17 +130,18 @@ router.get("/search", authMiddleware, async (req, res) => {
             return res.status(400).json({ message: "Search query is required." });
         }
 
-        // Perform a case-insensitive search on titles using a regular expression
-        const reports = await Report.find({
+        // Perform a case-insensitive search on titles
+        const searchResults = await Report.find({
             title: { $regex: query, $options: "i" },
             status: "approved"
         });
 
-        const reports = await Report.find(filter)
+        // Sort and populate the search results
+        const sortedReports = await Report.find({ _id: { $in: searchResults.map(r => r._id) } })
             .sort({ createdAt: -1 }) // Sort by most recent first
             .populate("reporter", "firstName lastName"); // Populate reporter details
 
-        res.json({ success: true, reports });
+        res.json({ success: true, reports: sortedReports });
     } catch (error) {
         console.error("Search error:", error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
