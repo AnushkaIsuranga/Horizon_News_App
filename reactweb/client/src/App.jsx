@@ -2,6 +2,7 @@ import { useState } from 'react'
 import React from 'react';
 import Signin from './Signin.jsx';
 import Home from './home.jsx';
+import AddUser from './AddUser.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Signin />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/add-user" element={<AddUser />} />
       </Routes>
     </Router>
   );

@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Home.css'; 
+import Navbar from './NavBar.jsx';
+import './common.css';
 
 const Home = () => {
   const [users, setUsers] = useState([]);
-  const [newUser, setNewUser] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone: '',
-    password: '',
-    role: 'editor'
-  });
 
   useEffect(() => {
     fetchUsers();
@@ -47,61 +40,39 @@ const Home = () => {
     }
   };
 
-  const addUser = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/api/users', newUser);
-      setUsers([...users, response.data.user]);
-      setNewUser({ first_name: '', last_name: '', email: '', phone: '', password: '', role: 'editor' });
-    } catch (error) {
-      console.error('Error adding user:', error);
-    }
-  };
-
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>User List</h1>
-
-      <form onSubmit={addUser}>
-        <input type="text" placeholder="First Name" value={newUser.first_name} onChange={(e) => setNewUser({ ...newUser, first_name: e.target.value })} required />
-        <input type="text" placeholder="Last Name" value={newUser.last_name} onChange={(e) => setNewUser({ ...newUser, last_name: e.target.value })} required />
-        <input type="email" placeholder="Email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} required />
-        <input type="text" placeholder="Phone" value={newUser.phone} onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} required />
-        <input type="password" placeholder="Password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} required />
-        <select value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}>
-          <option value="reporter">reporter</option>
-          <option value="user">user</option>
-        </select>
-        <button type="submit">Add User</button>
-      </form>
-
-      <table border="1">
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user._id}>
-              <td>{user.first_name}</td>
-              <td>{user.last_name}</td>
-              <td>{user.email}</td>
-              <td>{user.phone}</td>
-              <td>{user.role}</td>
-              <td className="actions">
-                <button onClick={() => updateUser(user._id)}>Edit</button>
-                <button onClick={() => deleteUser(user._id)}>Delete</button>
-              </td>
+    <div>
+      <Navbar />
+      <div style={{ padding: '20px' }}>
+        <h1>User List</h1>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Role</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.first_name}</td>
+                <td>{user.last_name}</td>
+                <td>{user.email}</td>
+                <td>{user.phone}</td>
+                <td>{user.role}</td>
+                <td className="actions">
+                  <button onClick={() => updateUser(user._id)}>Edit</button>
+                  <button onClick={() => deleteUser(user._id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
