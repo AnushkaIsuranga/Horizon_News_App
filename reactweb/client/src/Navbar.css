@@ -1,0 +1,128 @@
+.navbar {
+    background: linear-gradient(135deg, rgba(25, 0, 255, 0.295), #3B82F6); /* Elegant gradient */
+    color: white;
+    padding: 15px 40px; /* Ample padding for a spacious feel */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 30px; /* More rounded corners for a softer look */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5); /* Deeper shadow for more depth */
+    transition: background 0.3s ease; /* Smooth background transition */
+    position: relative; /* For positioning the glow */
+}
+
+.navbar:hover {
+    background: linear-gradient(135deg, #3B82F6, rgba(25, 0, 255, 0.295)); /* Reverse gradient on hover */
+}
+
+.nav-links {
+    display: flex; /* Ensure links are displayed in a row */
+}
+
+.nav-links a {
+    color: #E0F2FE; /* Very light blue for links */
+    text-decoration: none;
+    margin: 0 30px; /* Increased margin for better spacing */
+    font-weight: 600; /* Slightly lighter font weight */
+    font-size: 18px; /* Larger font size for better readability */
+    position: relative; /* For pseudo-element positioning */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+    padding: 5px 0; /* Add vertical padding for better click area */
+    font-family: 'Arial', sans-serif; /* Clean font for modern look */
+}
+
+.nav-links a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 3px; /* Thicker underline */
+    background: #FFD700; /* Gold underline */
+    transition: width 0.3s ease; /* Smooth width transition */
+    position: absolute;
+    bottom: -5px; /* Positioning the underline */
+    left: 50%;
+    transform: translateX(-50%); /* Center the underline */
+}
+
+.nav-links a:hover {
+    color: #FFD700; /* Gold color on hover for a luxurious feel */
+    transform: translateY(-3px); /* Slightly lift the link on hover */
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); /* Subtle glow effect */
+}
+
+.nav-links a:hover::after {
+    width: 100%; /* Expand underline on hover */
+}
+
+.navbar-title {
+    font-size: 28px; /* Larger font size for the title */
+    font-weight: bold;
+    color: #FFFFFF; /* White color for the title */
+    letter-spacing: 1.5px; /* Slightly increased letter spacing for elegance */
+    transition: transform 0.3s ease, color 0.3s ease; /* Smooth title transition */
+    font-family: 'Georgia', serif; /* Elegant font for the title */
+}
+
+.navbar-title:hover {
+    transform: scale(1.05); /* Slightly enlarge title on hover */
+    color: #FFD700; /* Change title color on hover */
+}
+
+/* Optional: Add a subtle glow effect to the navbar */
+.navbar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 30px; /* Match the navbar's border radius */
+    background: rgba(25, 0, 255, 0.295); /* Soft gold glow */
+    filter: blur(30px); /* Blur effect for the glow */
+    z-index: -1; /* Place behind the navbar */
+    opacity: 0; /* Start hidden */
+    transition: opacity 0.3s ease; /* Smooth transition for the glow */
+}
+
+.navbar:hover::before {
+    opacity: 1; /* Show glow on hover */
+}
+
+/* Add a subtle animation to the navbar */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.navbar {
+    animation: slideIn 0.5s ease forwards; /* Slide-in animation */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+        padding: 10px 20px; /* Adjust padding */
+    }
+
+    .nav-links {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+        align-items: center; /* Center align links */
+        margin-top: 10px; /* Add space between title and links */
+    }
+
+    .nav-links a {
+        margin: 10px 0; /* Adjust margin for vertical spacing */
+        font-size: 16px; /* Slightly smaller font size for mobile */
+    }
+
+    .navbar-title {
+        font-size: 24px; /* Adjust title size for mobile */
+    }
+}
