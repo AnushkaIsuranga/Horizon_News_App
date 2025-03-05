@@ -12,7 +12,7 @@ const AddUser = () => {
     email: '',
     phone: '',
     password: '',
-    role: 'editor'
+    role: 'reporter'
   });
 
   const addUser = async (e) => {
@@ -39,7 +39,6 @@ const AddUser = () => {
         <input type="password" placeholder="Password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} required />
         <select value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}>
           <option value="reporter">Reporter</option>
-          <option value="user">User</option>
         </select>
         <button type="submit">Add User</button>
       </form>
