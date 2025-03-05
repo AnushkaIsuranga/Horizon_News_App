@@ -1,11 +1,13 @@
 package com.kahdse.horizonnewsapp.utils
 
+import com.kahdse.horizonnewsapp.model.CommentRatingRequest
 import com.kahdse.horizonnewsapp.model.LoginRequest
 import com.kahdse.horizonnewsapp.model.LoginResponse
 import com.kahdse.horizonnewsapp.model.Report
 import com.kahdse.horizonnewsapp.model.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,6 +15,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -31,7 +34,6 @@ interface ApiService {
     @POST("api/users/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
-
     @Multipart
     @POST("api/news/create")
     fun createReport(
@@ -48,9 +50,19 @@ interface ApiService {
     @GET("api/news/pending")
     fun getPendingReports(): Call<List<Report>>
 
-    @GET("reports/search")
+    @GET("api/news/search")
     fun searchReports(
         @Query("query") query: String?,
         @Query("category") category: String?
     ): Call<List<Report>>
+
+    @GET("api/news/{id}")
+    fun getReportById(@Path("id") id: String): Call<Report>
+
+    @POST("api/news/{id}/user-comment")
+    fun addUserComment(
+        @Path("id") newsId: String,
+        @Header("Authorization") token: String,
+        @Body request: CommentRatingRequest
+    ): Call<ResponseBody>
 }
