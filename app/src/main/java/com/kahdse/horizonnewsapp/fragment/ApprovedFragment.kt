@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.GsonBuilder
 import com.kahdse.horizonnewsapp.R
 import com.kahdse.horizonnewsapp.adapter.ApprovedAdapter
 import com.kahdse.horizonnewsapp.adapter.PendingAdapter
@@ -17,7 +16,6 @@ import com.kahdse.horizonnewsapp.model.Report
 import com.kahdse.horizonnewsapp.network.RetrofitClient
 import com.kahdse.horizonnewsapp.utils.ApiService
 import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
 
 class ApprovedFragment : Fragment() {
 
@@ -55,7 +53,7 @@ class ApprovedFragment : Fragment() {
                     }
                 } else {
                     Log.e("API_RESPONSE", "Failed response: ${response.errorBody()?.string()}")
-                    Toast.makeText(requireContext(), "Failed to load pending reports", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed to load approved reports", Toast.LENGTH_SHORT).show()
                 }
             }
 

@@ -152,24 +152,36 @@ router.get("/search", authMiddleware, async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const news = await News.findById(req.params.id)
-            .populate('reporter', 'first_name last_name')
+            .populate('reporter', 'first_name last_name')  // Populate reporter fields
             .populate('user_comments.user', 'first_name last_name profile_pic');
 
         if (!news) return res.status(404).json({ message: "News not found" });
 
         res.status(200).json({
-            ...news._doc,
-            averageRating: news.averageRating
+            id: news._id,
+            title: news.title,
+            content: news.content,
+            category: news.category,
+            cover_photo: news.cover_photo,
+            status: news.status,
+            createdAt: news.createdAt,
+            averageRating: news.averageRating,
+            reporter: news.reporter
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-// Add user comment & rating (Visible to everyone)
+// Add user comment & rating
 router.post('/:id/user-comment', authMiddleware, async (req, res) => {
     try {
         const { rating, comment } = req.body;
+
+        if (!rating || !comment) {
+            return res.status(400).json({ message: 'Rating and comment are required' });
+        }
+
         if (rating < 1 || rating > 5) {
             return res.status(400).json({ message: 'Rating must be between 1 and 5' });
         }
@@ -177,11 +189,19 @@ router.post('/:id/user-comment', authMiddleware, async (req, res) => {
         const news = await News.findById(req.params.id);
         if (!news) return res.status(404).json({ message: 'Report not found' });
 
-        news.user_comments.push({ user: req.user._id, rating, comment });
+        const newComment = {
+            user: req.user._id,
+            rating,
+            comment,
+            createdAt: new Date()
+        };
 
+        news.user_comments.push(newComment);
         await news.save();
-        res.json(news);
+
+        res.json({ message: "Comment added successfully!", comment: newComment });
     } catch (error) {
+        console.error("Error adding comment:", error);
         res.status(500).json({ message: error.message });
     }
 });

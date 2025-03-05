@@ -112,4 +112,8 @@ dependencies {
     implementation ("androidx.compose.runtime:runtime-livedata")
     // Optional - Integration with RxJava
     implementation ("androidx.compose.runtime:runtime-rxjava2")
+
+    // Glide(Image Loader)
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 }
