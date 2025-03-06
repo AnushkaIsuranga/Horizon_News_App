@@ -13,12 +13,13 @@ function Signin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
+  
     try {
       const response = await axios.post('http://localhost:5000/api/signin', { email, password });
-      const { token } = response.data;
-
+      const { token, user } = response.data;
+  
       localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user)); // Store user info
       navigate('/home');
     } catch (err) {
       setError('Invalid email or password');

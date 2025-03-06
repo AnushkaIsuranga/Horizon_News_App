@@ -15,6 +15,30 @@
     background: linear-gradient(135deg, #3B82F6, rgba(25, 0, 255, 0.295)); /* Reverse gradient on hover */
 }
 
+.logout-btn {
+    background: none; /* Remove background */
+    color: #E0F2FE; /* Match link color */
+    border: none; /* Remove border */
+    padding: 10px 15px; /* Increased padding for a larger button */
+    margin: 0 20px; /* Match margin with links */
+    font-size: 20px; /* Increased font size for better visibility */
+    font-weight: 600; /* Match font weight */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+    font-family: 'Arial', sans-serif; /* Match font family */
+    border-radius: 5px; /* Optional: Add slight rounding to corners */
+    line-height: 1; /* Adjust line height for better vertical alignment */
+    position: relative; /* Allow positioning adjustments */
+    top: -2px; /* Move the button up slightly */
+}
+
+.logout-btn:hover {
+    color: #FFD700; /* Gold color on hover for a luxurious feel */
+    transform: translateY(-3px); /* Slightly lift the button on hover */
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); /* Subtle glow effect */
+}
+
+
 .nav-links {
     display: flex; /* Ensure links are displayed in a row */
 }
