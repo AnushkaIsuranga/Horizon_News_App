@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="16dp"
+    android:background="?attr/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- News Cover Image with Rounded Corners -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/newsDetailImage"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/RoundedCorners"/>
+
+        <!-- News Title -->
+        <TextView
+            android:id="@+id/newsDetailTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="News Title"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:paddingTop="8dp"
+            android:textColor="?attr/colorOnBackground" />
+
+        <!-- Reporter Name -->
+        <TextView
+            android:id="@+id/newsDetailReporter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="By: Reporter Name"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textStyle="italic"
+            android:textColor="?attr/colorOnSurface"
+            android:paddingBottom="8dp" />
+
+        <!-- News Content -->
+        <TextView
+            android:id="@+id/newsDetailContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="News content goes here..."
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorOnBackground"
+            android:paddingBottom="12dp" />
+
+        <!-- Rating Bar -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:cardElevation="4dp"
+            android:cardCornerRadius="8dp"
+            android:background="?attr/colorSurface">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rate this article:"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:textColor="?attr/colorOnBackground"/>
+
+                <RatingBar
+                    android:id="@+id/newsDetailRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="0.5"
+                    android:rating="0"
+                    android:layout_marginStart="12dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Comment Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:cardElevation="4dp"
+            android:cardCornerRadius="8dp"
+            android:background="?attr/colorSurface">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Leave a Comment"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?attr/colorOnBackground"/>
+
+                <EditText
+                    android:id="@+id/newsDetailCommentEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Type your comment..."
+                    android:background="@drawable/edittext_bg"
+                    android:padding="12dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textAppearance="?attr/textAppearanceBody1"/>
+
+                <Button
+                    android:id="@+id/newsDetailSubmitButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Submit"
+                    android:layout_marginTop="12dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Comments Section -->
+        <TextView
+            android:id="@+id/newsDetailCommentsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comments"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp"
+            android:visibility="gone"
+            android:textColor="?attr/colorOnBackground"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </LinearLayout>
+</ScrollView>
