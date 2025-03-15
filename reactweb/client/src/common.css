@@ -1,0 +1,129 @@
+body {
+  display: block;
+  background: linear-gradient(to right, #ffffff, #dafbff); /* Light blue gradient background */
+  margin: 0;
+  padding: 20px;
+  font-family: 'Arial', sans-serif; /* Modern font */
+}
+
+h1 {
+  text-align: center;
+  color: #0277bd; /* Dark blue for the heading */
+  margin-bottom: 30px;
+  font-size: 2.5em; /* Larger heading */
+  letter-spacing: 1px; /* Slightly increased letter spacing */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+}
+
+form {
+  background: #ffffff; /* White background for forms */
+  padding: 30px; /* Increased padding for a spacious feel */
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Deeper shadow for depth */
+  margin-bottom: 30px;
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transform and shadow on hover */
+}
+
+form:hover {
+  transform: translateY(-2px); /* Lift effect on hover */
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: calc(100% - 20px);
+  padding: 12px; /* Increased padding for comfort */
+  margin: 12px 0; /* Increased margin for better spacing */
+  border: 1px solid #90caf9; /* Light blue border color */
+  border-radius: 6px; /* Rounded corners */
+  box-sizing: border-box;
+  font-size: 1em; /* Consistent font size */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth border color and shadow transition */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+  border-color: #0288d1; /* Darker blue border on focus */
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 5px rgba(2, 136, 209, 0.5); /* Subtle shadow on focus */
+}
+
+button {
+  background-color: #0288d1; /* Blue button */
+  color: white;
+  padding: 12px 20px; /* Increased padding */
+  border: none;
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* Added transform for hover effect */
+  margin-top: 10px;
+  font-size: 1em; /* Consistent font size */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for buttons */
+}
+
+button:hover {
+  background-color: #0277bd; /* Darker blue on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 30px; /* Increased margin for separation */
+  border-radius: 12px; /* Rounded corners for the table */
+  overflow: hidden; /* Ensures rounded corners are visible */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for the table */
+}
+
+th, td {
+  padding: 15px; /* Increased padding for table cells */
+  text-align: left;
+  border-bottom: 1px solid #90caf9; /* Light blue border for table rows */
+}
+
+th {
+  background-color: #b3e5fc; /* Light blue for header */
+  font-weight: bold; /* Bold text for headers */
+  color: #01579b; /* Darker text color for headers */
+}
+
+tr:hover {
+  background-color: #e1f5fe; /* Subtle hover effect for rows */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.actions button {
+  background-color: #03a9f4; /* Lighter blue action buttons */
+  margin-right: 10px; /* Increased margin for spacing */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+.actions button:hover {
+    background-color: #0288d1; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+@media (max-width: 600px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    h1 {
+        font-size: 2em; /* Adjust heading size for smaller screens */
+    }
+
+    form {
+        padding: 20px; /* Adjust padding for smaller screens */
+    }
+
+    button {
+        width: 100%; /* Full width buttons on smaller screens */
+    }
+}

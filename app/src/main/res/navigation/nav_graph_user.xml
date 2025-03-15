@@ -2,47 +2,58 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/nav_news">
+    app:startDestination="@id/nav_news"> <!-- Start with the News fragment -->
 
+    <!-- News Fragment -->
     <fragment
         android:id="@+id/nav_news"
         android:name="com.kahdse.horizonnewsapp.fragment.NewsFragment"
         android:label="News"
-        tools:layout="@layout/fragment_news">
-        <action
-            android:id="@+id/action_nav_draft_to_nav_pending"
-            app:destination="@id/nav_pending"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-    </fragment>
+        tools:layout="@layout/fragment_news" />
 
+    <!-- Search & Filter Fragment -->
     <fragment
-        android:id="@+id/nav_profile"
-        android:name="com.kahdse.horizonnewsapp.fragment.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile">
-        <action
-            android:id="@+id/action_nav_draft_to_nav_pending"
-            app:destination="@id/nav_pending"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-    </fragment>
+        android:id="@+id/nav_search_filter"
+        android:name="com.kahdse.horizonnewsapp.fragment.SearchFilterFragment"
+        android:label="Search &amp; Filter"
+        tools:layout="@layout/fragment_search_filter" />
 
+    <!-- Settings Fragment -->
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.kahdse.horizonnewsapp.fragment.SettingsFragment"
         android:label="Settings"
-        tools:layout="@layout/fragment_settings">
-        <action
-            android:id="@+id/action_nav_draft_to_nav_pending"
-            app:destination="@id/nav_pending"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-    </fragment>
+        tools:layout="@layout/fragment_settings" />
+
+    <!-- Profile Fragment -->
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.kahdse.horizonnewsapp.fragment.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <!-- Define Actions for Navigation -->
+    <action
+        android:id="@+id/action_nav_news_to_nav_search_filter"
+        app:destination="@id/nav_search_filter"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_nav_news_to_nav_settings"
+        app:destination="@id/nav_settings"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_nav_news_to_nav_profile"
+        app:destination="@id/nav_profile"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 </navigation>

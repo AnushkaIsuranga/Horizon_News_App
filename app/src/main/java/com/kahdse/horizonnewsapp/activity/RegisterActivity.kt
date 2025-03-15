@@ -12,14 +12,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.kahdse.horizonnewsapp.ApiService
+import com.kahdse.horizonnewsapp.utils.ApiService
 import com.kahdse.horizonnewsapp.R
 import com.kahdse.horizonnewsapp.model.UserResponse
 import com.kahdse.horizonnewsapp.network.RetrofitClient
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call

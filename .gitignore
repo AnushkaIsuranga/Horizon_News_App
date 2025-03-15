@@ -1,6 +1,11 @@
 node_modules
 .vercel
+.fake
+.gradle
+.idea
 caches
 wrapper
-workspace.xml
-.fake
+nativ
+daemon
+daemon\8.9
+kotlin-profile

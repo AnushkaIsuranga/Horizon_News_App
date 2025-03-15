@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,6 +30,22 @@
         android:clickable="true"
         android:focusable="true" />
 
+    <!-- Category Selection -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Category"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:singleSelection="true"/>
+
     <EditText
         android:id="@+id/etContent"
         android:layout_width="match_parent"
@@ -43,3 +64,4 @@
         android:text="Submit Report" />
 
 </LinearLayout>
+</androidx.core.widget.NestedScrollView>
