@@ -1,6 +1,7 @@
 package com.kahdse.horizonnewsapp.activity
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -79,6 +80,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun saveTokenToStorage(token: String) {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("auth_token", token)
+            apply()
+        }
+        Log.d("LoginActivity", "Token saved: $token") // Debug log
+    }
+
     private fun loginUser() {
         val email = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
@@ -112,16 +122,19 @@ class LoginActivity : AppCompatActivity() {
                         putString("TOKEN", token)
                         putString("userEmail", user.email)
                         putString("userRole", role)
-                        putString("FirstName", user.first_name)  // 🔹 Store first name here
+                        putString("FirstName", user.first_name)
                         apply()
                     }
 
-                    // Save token ONLY if "Remember Me" is checked
+                    // Save token and login state ONLY if "Remember Me" is checked
                     if (rememberMeCheckBox.isChecked) {
                         sharedPref.edit().putBoolean("isLoggedIn", true).apply()
                     } else {
                         sharedPref.edit().putBoolean("isLoggedIn", false).apply()
                     }
+
+                    // Save the token
+                    saveTokenToStorage(loginResponse.token)
 
                     // Navigate based on user role
                     val intent = when (role) {

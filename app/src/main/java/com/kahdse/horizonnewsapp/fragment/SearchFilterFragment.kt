@@ -3,6 +3,7 @@ package com.kahdse.horizonnewsapp.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,11 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kahdse.horizonnewsapp.R
 import com.kahdse.horizonnewsapp.adapter.ReportAdapter
+import com.kahdse.horizonnewsapp.model.ApiResponse
 import com.kahdse.horizonnewsapp.model.Report
 import com.kahdse.horizonnewsapp.network.RetrofitClient
 import com.kahdse.horizonnewsapp.utils.ApiService
@@ -46,7 +49,6 @@ class SearchFilterFragment : Fragment() {
         spinnerCategory = view.findViewById(R.id.spinnerCategory)
         recyclerView = view.findViewById(R.id.recyclerViewReports)
 
-
         setupRecyclerView()
         setupCategorySpinner()
         setupSearchListener()
@@ -55,6 +57,7 @@ class SearchFilterFragment : Fragment() {
     private fun setupRecyclerView() {
         reportAdapter = ReportAdapter(emptyList())
         recyclerView.adapter = reportAdapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun setupCategorySpinner() {
@@ -85,17 +88,22 @@ class SearchFilterFragment : Fragment() {
     }
 
     private fun searchReports(query: String, category: String?) {
-        apiService.searchReports(query, category).enqueue(object : Callback<List<Report>> {
-            override fun onResponse(call: Call<List<Report>>, response: Response<List<Report>>) {
+        apiService.searchReports(query, category).enqueue(object : Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
-                    val reports = response.body() ?: emptyList()
-                    reportAdapter.updateData(reports)
+                    val apiResponse = response.body()
+                    if (apiResponse?.success == true) {
+                        val reports = apiResponse.reports ?: emptyList()
+                        reportAdapter.updateData(reports)
+                    } else {
+                        Toast.makeText(requireContext(), "Search failed!", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(requireContext(), "Search failed!", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<List<Report>>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
