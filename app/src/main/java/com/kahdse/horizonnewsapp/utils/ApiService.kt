@@ -1,5 +1,7 @@
 package com.kahdse.horizonnewsapp.utils
 
+import com.kahdse.horizonnewsapp.model.ApiResponse
+import com.kahdse.horizonnewsapp.model.Comment
 import com.kahdse.horizonnewsapp.model.CommentRatingRequest
 import com.kahdse.horizonnewsapp.model.LoginRequest
 import com.kahdse.horizonnewsapp.model.LoginResponse
@@ -54,15 +56,18 @@ interface ApiService {
     fun searchReports(
         @Query("query") query: String?,
         @Query("category") category: String?
-    ): Call<List<Report>>
+    ): Call<ApiResponse>
 
     @GET("api/news/{id}")
     fun getReportById(@Path("id") id: String): Call<Report>
+
+    @GET("api/news/{id}/user-comments")
+    fun getComments(@Path("id") newsId: String): Call<List<Comment>>
 
     @POST("api/news/{id}/user-comment")
     fun addUserComment(
         @Path("id") newsId: String,
         @Header("Authorization") token: String,
         @Body request: CommentRatingRequest
-    ): Call<ResponseBody>
+    ): Call<Comment> // Return the Comment object directly
 }

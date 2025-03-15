@@ -81,7 +81,7 @@ class DraftFragment : Fragment() {
         val bundle = Bundle().apply {
             putInt("draftId", draft.id)
         }
-        findNavController().navigate(R.id.action_draftFragment_to_createReportFragment, bundle)
+        findNavController().navigate(R.id.action_draft_to_create_report, bundle)
     }
 
     private fun deleteDraft(draftId: Int) {

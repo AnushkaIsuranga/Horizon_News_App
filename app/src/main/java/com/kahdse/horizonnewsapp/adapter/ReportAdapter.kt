@@ -1,6 +1,6 @@
 package com.kahdse.horizonnewsapp.adapter
 
-import android.icu.text.SimpleDateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kahdse.horizonnewsapp.R
 import com.kahdse.horizonnewsapp.model.Report
+import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Locale
 
 class ReportAdapter(private var reports: List<Report>) :
     RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
@@ -26,6 +26,7 @@ class ReportAdapter(private var reports: List<Report>) :
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
         val report = reports[position]
+        Log.d("ReportAdapter", "Binding report: ${report.title}, ${report.getFormattedDate()}")
         holder.title.text = report.title
         holder.date.text = report.getFormattedDate()
     }
@@ -35,5 +36,8 @@ class ReportAdapter(private var reports: List<Report>) :
     fun updateData(newReports: List<Report>) {
         reports = newReports
         notifyDataSetChanged()
+        if (newReports.isEmpty()) {
+            Log.d("ReportAdapter", "No reports found")
+        }
     }
 }

@@ -122,26 +122,32 @@ router.get('/', authMiddleware, async (req, res) => {
 });
 
 // Search reports by title
-router.get("/search", authMiddleware, async (req, res) => {
+router.get("/search", async (req, res) => {
     try {
-        const { query } = req.query; // Get search query from request
+        const { query, category } = req.query;
 
-        if (!query) {
-            return res.status(400).json({ message: "Search query is required." });
+        // Build the filter
+        const filter = { status: "approved" };
+
+        // Add query filter (if provided)
+        if (query) {
+            filter.$or = [
+                { title: { $regex: query, $options: "i" } },
+                { content: { $regex: query, $options: "i" } }
+            ];
         }
 
-        // Perform a case-insensitive search on titles
-        const searchResults = await Report.find({
-            title: { $regex: query, $options: "i" },
-            status: "approved"
-        });
+        // Add category filter (if provided and not 'All')
+        if (category && category !== "All") {
+            filter.category = category;
+        }
 
-        // Sort and populate the search results
-        const sortedReports = await Report.find({ _id: { $in: searchResults.map(r => r._id) } })
+        // Fetch and sort the results
+        const searchResults = await News.find(filter)
             .sort({ createdAt: -1 }) // Sort by most recent first
-            .populate("reporter", "firstName lastName"); // Populate reporter details
+            .populate("reporter", "first_name last_name"); // Populate reporter details
 
-        res.json({ success: true, reports: sortedReports });
+        res.json({ success: true, reports: searchResults });
     } catch (error) {
         console.error("Search error:", error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -178,6 +184,7 @@ router.post('/:id/user-comment', authMiddleware, async (req, res) => {
     try {
         const { rating, comment } = req.body;
 
+        // Validate input
         if (!rating || !comment) {
             return res.status(400).json({ message: 'Rating and comment are required' });
         }
@@ -186,9 +193,11 @@ router.post('/:id/user-comment', authMiddleware, async (req, res) => {
             return res.status(400).json({ message: 'Rating must be between 1 and 5' });
         }
 
+        // Find the news item
         const news = await News.findById(req.params.id);
         if (!news) return res.status(404).json({ message: 'Report not found' });
 
+        // Create new comment
         const newComment = {
             user: req.user._id,
             rating,
@@ -196,12 +205,40 @@ router.post('/:id/user-comment', authMiddleware, async (req, res) => {
             createdAt: new Date()
         };
 
+        // Add comment to the news item
         news.user_comments.push(newComment);
         await news.save();
 
+        // Return success response
         res.json({ message: "Comment added successfully!", comment: newComment });
     } catch (error) {
         console.error("Error adding comment:", error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Fetch comments for a specific news article
+router.get('/:id/user-comments', async (req, res) => {
+    try {
+        const news = await News.findById(req.params.id)
+            .populate('user_comments.user', 'first_name last_name profile_pic'); // Populate user details in comments
+
+        if (!news) {
+            return res.status(404).json({ message: "News not found" });
+        }
+
+        // Extract comments from the news article
+        const comments = news.user_comments.map(comment => ({
+            id: comment._id,
+            user: comment.user,
+            rating: comment.rating,
+            comment: comment.comment,
+            createdAt: comment.createdAt
+        }));
+
+        res.status(200).json(comments);
+    } catch (error) {
+        console.error("Error fetching comments:", error);
         res.status(500).json({ message: error.message });
     }
 });
