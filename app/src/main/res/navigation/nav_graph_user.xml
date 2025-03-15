@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/nav_news"> <!-- Start with the News fragment -->
+    app:startDestination="@id/nav_news">
 
     <!-- News Fragment -->
     <fragment
@@ -25,12 +25,7 @@
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
 
-    <!-- Profile Fragment -->
-    <fragment
-        android:id="@+id/nav_profile"
-        android:name="com.kahdse.horizonnewsapp.fragment.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+    <!-- Remove Profile Fragment -->
 
     <!-- Define Actions for Navigation -->
     <action
@@ -44,14 +39,6 @@
     <action
         android:id="@+id/action_nav_news_to_nav_settings"
         app:destination="@id/nav_settings"
-        app:enterAnim="@anim/slide_in_right"
-        app:exitAnim="@anim/slide_out_left"
-        app:popEnterAnim="@anim/slide_in_left"
-        app:popExitAnim="@anim/slide_out_right" />
-
-    <action
-        android:id="@+id/action_nav_news_to_nav_profile"
-        app:destination="@id/nav_profile"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@anim/slide_in_left"

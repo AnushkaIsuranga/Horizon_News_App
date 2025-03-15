@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -24,36 +23,32 @@ class UserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
 
+        // Initialize shared preferences and TextView
         sharedPref = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-        val userName = sharedPref.getString("FirstName", null)
-
-        // Initialize TextView correctly
         tvGreeting = findViewById(R.id.tvGreeting)
 
-        // Update the TextView with the actual name
+        // Fetch user's name from SharedPreferences and update greeting text
+        val userName = sharedPref.getString("FirstName", null)
         tvGreeting.text = if (userName != null) "Hey $userName!" else "Hey Guest!"
 
-        // Set up Navigation Controller
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        // Set up the NavController for Bottom Navigation
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Set up Bottom Navigation with NavController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationUser)
         bottomNavigationView.setupWithNavController(navController)
 
-        // Initialize imgProfile
+        // Handle profile image click
         val imgProfile = findViewById<ImageView>(R.id.imgProfile)
         imgProfile.setOnClickListener {
             val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
-            Log.d("USER_ACTIVITY", "Profile clicked. isLoggedIn: $isLoggedIn")
-
             if (!isLoggedIn) {
-                Log.d("USER_ACTIVITY", "User is not logged in. Redirecting to LoginActivity")
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
+                // If not logged in, open the login screen
+                startActivity(Intent(this, LoginActivity::class.java))
             } else {
-                Log.d("USER_ACTIVITY", "User is logged in. Navigating to ProfileFragment")
-                navController.navigate(R.id.nav_profile) // 🔍 Make sure this ID is correct in `nav_graph.xml`
+                // If logged in, open the profile activity
+                startActivity(Intent(this, ProfileActivity::class.java))
             }
         }
     }
