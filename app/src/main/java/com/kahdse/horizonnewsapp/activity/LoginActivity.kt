@@ -83,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
     private fun saveTokenToStorage(token: String) {
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putString("auth_token", token)
+            putString("TOKEN", token)
             apply()
         }
         Log.d("LoginActivity", "Token saved: $token") // Debug log
@@ -134,7 +134,7 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     // Save the token
-                    saveTokenToStorage(loginResponse.token)
+                    saveTokenToStorage(token)
 
                     // Navigate based on user role
                     val intent = when (role) {
