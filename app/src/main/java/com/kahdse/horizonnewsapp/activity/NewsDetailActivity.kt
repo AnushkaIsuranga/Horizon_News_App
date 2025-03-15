@@ -183,8 +183,8 @@ class NewsDetailActivity : AppCompatActivity() {
     }
 
     private fun getTokenFromStorage(): String {
-        val sharedPreferences = this.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("auth_token", "") ?: ""
+        val sharedPreferences = this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("TOKEN", "") ?: ""
         Log.d("NewsDetailActivity", "Retrieved token: $token") // Debug log
         return token
     }
