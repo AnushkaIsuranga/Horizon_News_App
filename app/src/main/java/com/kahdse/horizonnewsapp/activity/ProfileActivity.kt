@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -7,11 +8,16 @@ import android.widget.Button
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 package com.kahdse.horizonnewsapp.activity
 
 import android.content.SharedPreferences
 import android.os.Bundle
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -20,6 +26,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.kahdse.horizonnewsapp.R
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 import com.kahdse.horizonnewsapp.activity.LoginActivity
@@ -33,6 +40,8 @@ class ProfileActivity : AppCompatActivity() {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -41,6 +50,9 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var tvEmail: TextView
     private lateinit var imgProfile: ImageView
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -50,6 +62,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
         profileImageView = findViewById(R.id.profileImageView)
@@ -97,6 +110,8 @@ class ProfileActivity : AppCompatActivity() {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         // Initialize views
         tvFirstName = findViewById(R.id.tvFirstName)
         tvLastName = findViewById(R.id.tvLastName)
@@ -129,6 +144,9 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
