@@ -184,6 +184,10 @@ router.post('/:id/user-comment', authMiddleware, async (req, res) => {
     try {
         const { rating, comment } = req.body;
 
+        // Log the incoming request
+        console.log("Incoming request:", req.body);
+        console.log("User ID:", req.user._id);
+
         // Validate input
         if (!rating || !comment) {
             return res.status(400).json({ message: 'Rating and comment are required' });

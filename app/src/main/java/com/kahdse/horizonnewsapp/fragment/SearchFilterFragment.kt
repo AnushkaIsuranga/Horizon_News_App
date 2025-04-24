@@ -61,7 +61,8 @@ class SearchFilterFragment : Fragment() {
     }
 
     private fun setupCategorySpinner() {
-        val categories = listOf("All", "Politics", "Sports", "Technology", "Entertainment")
+        val categories = listOf("All", "Sports", "Technology", "Politics", "Gossip",
+            "Weather", "Business", "Entertainment", "Lifestyle")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = adapter

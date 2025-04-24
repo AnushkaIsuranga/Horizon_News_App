@@ -91,10 +91,10 @@ class CreateReportFragment : Fragment() {
         // Retrieve the draftId from the arguments
         draftId = arguments?.getInt("draftId", -1) ?: -1
 
-        setupCategoryChips() // ✅ Load chips only once
+        setupCategoryChips()
 
         if (draftId != null && draftId != -1) {
-            loadDraft(draftId!!) // ✅ Load draft properly
+            loadDraft(draftId!!)
         }
     }
 

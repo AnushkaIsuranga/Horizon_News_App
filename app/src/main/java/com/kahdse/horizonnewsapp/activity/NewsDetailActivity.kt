@@ -155,6 +155,10 @@ class NewsDetailActivity : AppCompatActivity() {
         val commentRequest = CommentRatingRequest(rating.toInt(), comment)
         val authToken = "Bearer $token"
 
+        // Log the request details
+        Log.d("NewsDetailActivity", "Submitting comment with token: $authToken")
+        Log.d("NewsDetailActivity", "Request body: $commentRequest")
+
         apiService.addUserComment(newsId, authToken, commentRequest).enqueue(object : Callback<Comment> {
             override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
                 if (response.isSuccessful) {
@@ -168,16 +172,22 @@ class NewsDetailActivity : AppCompatActivity() {
                     }
                 } else {
                     // Handle API error
-                    when (response.code()) {
-                        400 -> Toast.makeText(this@NewsDetailActivity, "Rating and comment are required", Toast.LENGTH_SHORT).show()
-                        404 -> Toast.makeText(this@NewsDetailActivity, "Report not found", Toast.LENGTH_SHORT).show()
-                        else -> Toast.makeText(this@NewsDetailActivity, "Failed to submit comment", Toast.LENGTH_SHORT).show()
+                    val errorMessage = when (response.code()) {
+                        400 -> "Rating and comment are required"
+                        404 -> "Report not found"
+                        401 -> "Unauthorized: Please log in again"
+                        else -> "Failed to submit comment: ${response.code()}"
                     }
+                    Toast.makeText(this@NewsDetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
+
+                    // Log the error response
+                    Log.e("NewsDetailActivity", "API Error: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<Comment>, t: Throwable) {
                 Toast.makeText(this@NewsDetailActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Log.e("NewsDetailActivity", "Network Error: ${t.message}")
             }
         })
     }
